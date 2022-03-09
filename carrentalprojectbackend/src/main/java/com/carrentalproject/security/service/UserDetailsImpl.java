@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     //bu variable icinde hangi role sahip oldugunu burada saklicaz.
 
-    private static UserDetailsImpl build(User user){ //liste seklinde user ın rollerini alıyoruz ve
+    public static UserDetailsImpl build(User user){ //liste seklinde user ın rollerini alıyoruz ve
         List<GrantedAuthority> authorities= user.getRoles().stream()
                 .map(role-> new SimpleGrantedAuthority(role.getName().name()))//her bir role grant authority tanımlıyoruz ve name i alıyoruz
                 .collect(Collectors.toList());
