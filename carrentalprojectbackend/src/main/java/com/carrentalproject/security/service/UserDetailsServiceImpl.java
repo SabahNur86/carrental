@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
 @Service
@@ -15,8 +16,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userRepository.findByUserName(username).orElseThrow(()->new UsernameNotFoundException("User not found with username"+username));
+    @Transactional
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new UsernameNotFoundException("User not found with username"+email));
       return UserDetailsImpl.build(user); //build metodu ile user bilgileri gelicek o bilgileri dondurecek
 
     }

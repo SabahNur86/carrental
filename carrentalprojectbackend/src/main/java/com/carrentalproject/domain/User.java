@@ -35,10 +35,6 @@ public class User implements Serializable {
     @Column(nullable = false,length=15)
     private String lastName;
 
-    @Size(min=3,max=20,message = "Please enter min:3 and max:20")
-    @NotNull(message = "Please enter your user name")
-    @Column(nullable = false,unique = true, updatable = false, length=20)
-    private String userName;
 
     @Size(min=4, max=60, message = "please enter min 4 char")
     @NotNull(message = "Please enter your password")
@@ -57,10 +53,6 @@ public class User implements Serializable {
     @Column(nullable = false,unique = true,length = 150)
     private String email;
 
-    @Size(max=15)
-    @NotNull(message = "Please enter your city")
-    @Column(nullable = false, length = 15)
-    private String city;
 
     @Size(max = 250)
     @NotNull(message = "Please enter your address")
@@ -80,16 +72,7 @@ public class User implements Serializable {
                         //bir kisinin birden fazla rolü olabilecegi gibi bir role de birden fazla kisi sahip olabilir
     private Set<Role> roles=new HashSet<>();
 
-    public User(String firstName, String lastName, String userName, String password, String phoneNumber,
-                String email, String city, String address, String zipCode) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.city = city;
-        this.address = address;
-        this.zipCode = zipCode;
-    }
+    @Column(nullable = false)
+    private Boolean builtIn;
+
 }

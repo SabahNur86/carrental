@@ -1,5 +1,7 @@
 package com.carrentalproject.security.jwt;
 
+import com.carrentalproject.domain.User;
+import com.carrentalproject.repository.UserRepository;
 import com.carrentalproject.security.service.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
@@ -23,6 +27,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -34,21 +41,27 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try{
             String jwt=parseJwt(request);//
             if (jwt !=null && jwtUtils.validateJwtToken(jwt)){
-                String userName=jwtUtils.getUserNameFromJwtToken(jwt);
-                request.setAttribute("userName", userName);
-                UserDetails userDetails= userDetailsService.loadUserByUsername(userName);
-                UsernamePasswordAuthenticationToken authentication= new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                Long id=jwtUtils.getIdFromJwtToken(jwt);
+                request.setAttribute("id", id);
+                Optional<User> user = userRepository.findById(id);
+
+                UserDetails userDetails= userDetailsService.loadUserByUsername(user.get().getEmail());
+                UsernamePasswordAuthenticationToken authentication= new UsernamePasswordAuthenticationToken(
+                        userDetails,null,userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication); //burada hangi role ile giris yaptiginin bilgisini aliyoruz.
             }
         }catch (Exception e){
-            logger.error("Cannot set user authetication:{},e");
+            logger.error("Cannot set user authetication:{}",e);
         }
+        filterChain.doFilter(request,response);
 
     }
     private String parseJwt(HttpServletRequest request){//login istegi karsiliginda token gondermesini istedigimiz metod
         String headerAuth= request.getHeader("Authorization");
         if(StringUtils.hasText(headerAuth)&&headerAuth.startsWith("Bearer ")){
-            return headerAuth.substring(7);
+            return headerAuth.substring(7);// authorization a sahip token in
+                                           // bize 7. karakterden sonrasini donduruyor (parse ettik)
         }
           return null;
     }

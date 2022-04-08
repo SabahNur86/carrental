@@ -6,6 +6,7 @@ server:
   port: 8080
   servlet:
     context-path: /car-rental/api
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -18,7 +19,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         jdbc:
           lob:

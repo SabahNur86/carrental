@@ -24,37 +24,39 @@ import java.util.Set;
 public class UserService {
 
     private final RoleRepository roleRepository;
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void register (User user) throws BadRequestException{
-        if(userRepository.existsByUserName(user.getUserName())){
-            throw new ConflictException("Error: Username is already taken");
-        }
+
         if(userRepository.existsByEmail(user.getEmail())){
+            //register olmaya calisilan email daha once kullanilmis mi
             throw new ConflictException("Error: Email is already in use");
         }
         String encodedPassword=passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        Set<Role> roles= new HashSet<Role>();
+        user.setBuiltIn(false);
+
+        Set<Role> roles= new HashSet<>();
             Role customerRole=roleRepository.findByName(UserRole.ROLE_CUSTOMER)
                     .orElseThrow(()->new ResourceNotFoundException("Role is not found"));
         roles.add(customerRole);
         //Aynı userName e veya email adresine sahip kullanici yoksa
         //password u encode ederek rolunu veya rollerini listeye ekleyerek
 
+        user.setRoles(roles);
         userRepository.save(user); // bu user bilgilerini table a kaydettik
 
     }
 
-    public void login(String userName, String password){
+    public void login(String email, String password)throws AuthException{
         try{
-            Optional<User> user=userRepository.findByUserName(userName);
-            if(!BCrypt.checkpw(password, user.get().getPassword()))throw new AuthException("Invalid Credentials");
-      //User classından olusturdugumuz user objesine bu metoda gonderilen userName in olup olmadıgını kontrol ederek
-      // gonder ve checkpw metodu ile gelen passwordun userdaki password ile eşleşip eşleşmediğini kontrol et
-            //yoksa exception fırlat
+            Optional<User> user=userRepository.findByEmail(email);
+            if(!BCrypt.checkpw(password, user.get().getPassword()))
+                throw new AuthException("Invalid Credentials");
+      //User classindan olusturdugumuz user objesine bu metoda gonderilen userName in olup olmadigini kontrol ederek
+      // gonder ve checkpw metodu ile gelen passwordun userdaki password ile eslesip eslesmedigini kontrol et
+            //yoksa exception firlat
         }catch (Exception e){
             throw new AuthException("Invalid Credentials");
         }
