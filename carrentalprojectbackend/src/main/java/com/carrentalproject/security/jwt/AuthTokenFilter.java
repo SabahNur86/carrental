@@ -52,14 +52,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication); //burada hangi role ile giris yaptiginin bilgisini aliyoruz.
             }
         }catch (Exception e){
-            logger.error("Cannot set user authetication:{}",e);
+            logger.error("Cannot set user authentication:{}",e);
         }
         filterChain.doFilter(request,response);
 
     }
     private String parseJwt(HttpServletRequest request){//login istegi karsiliginda token gondermesini istedigimiz metod
         String headerAuth= request.getHeader("Authorization");
-        if(StringUtils.hasText(headerAuth)&&headerAuth.startsWith("Bearer ")){
+        if(StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")){
             return headerAuth.substring(7);// authorization a sahip token in
                                            // bize 7. karakterden sonrasini donduruyor (parse ettik)
         }

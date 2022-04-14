@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2e8524f-1f04-4035-9d20-def6a411dd68" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/jwt/AuthTokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/jwt/AuthTokenFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/config/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/jwt/AuthEntryPointJwt.java" beforeDir="false" afterPath="$PROJECT_DIR$/carrentalprojectbackend/src/main/java/com/carrentalproject/security/jwt/AuthEntryPointJwt.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +37,7 @@
       <workItem from="1648867545589" duration="1874000" />
       <workItem from="1648928555128" duration="706000" />
       <workItem from="1649077367320" duration="908000" />
+      <workItem from="1649422392325" duration="19000" />
     </task>
     <servers />
   </component>

@@ -35,7 +35,7 @@ public class UserDetailsImpl implements UserDetails {
     //bu variable icinde hangi role sahip oldugunu burada saklicaz.
 
     public static UserDetailsImpl build(User user){ //liste seklinde user ın rollerini alıyoruz ve
-        List<GrantedAuthority> authorities= user.getRoles().stream()
+        List<GrantedAuthority> authorities= user.getRole().stream()
                 .map(role-> new SimpleGrantedAuthority(role.getName().name()))//her bir role grant authority tanımlıyoruz ve name i alıyoruz
                 .collect(Collectors.toList());
 

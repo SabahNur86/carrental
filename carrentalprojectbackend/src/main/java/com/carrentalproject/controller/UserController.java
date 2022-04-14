@@ -1,21 +1,26 @@
 package com.carrentalproject.controller;
 
 import com.carrentalproject.domain.User;
+import com.carrentalproject.dto.UserDTO;
+import com.carrentalproject.projection.ProjectUser;
 import com.carrentalproject.security.jwt.JwtUtils;
 import com.carrentalproject.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping
@@ -31,7 +36,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String,Boolean>> registerUser(@Valid @RequestBody User user) {
-        userService.register(user);
+        //register metodu bir map dondurecek
+        userService.register(user);//metod dogru bir sekilde calisirsa ("User registered successfully ", true) donecek
         Map<String, Boolean> map = new HashMap<>();//register oldugunda mesaj ve true donsun diye
         map.put("User registered successfully ", true);
         return new ResponseEntity<>(map, HttpStatus.CREATED);
@@ -54,8 +60,40 @@ public class UserController {
 
         Map<String,String> map=new HashMap<>();
         map.put("token",jwt);
-        return new ResponseEntity<>(map,HttpStatus.OK);
+        return new ResponseEntity<>(map,HttpStatus.OK); //login olabildiginde map donecek(token)
 
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> getUserById(HttpServletRequest request){
+        Long id=(Long)request.getAttribute("id");
+        UserDTO user=userService.findById(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+    @GetMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> getUserByIdAdmin(@PathVariable Long id){
+        UserDTO user=userService.findById(id);
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+
+    @GetMapping("/user/auth/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProjectUser>> getAllUsers(){
+       List<ProjectUser> users=userService.fetchAllUsers();
+       return new ResponseEntity<>(users,HttpStatus.OK);
+    }
+
+    @PutMapping("/user")
+    @PreAuthorize("hasRole('CUSTOMER')or hasRole('ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> updateUser(HttpServletRequest request,
+                                                          @Valid @RequestBody UserDTO userDTO){
+        Long id=(Long) request.getAttribute("id");
+        userService.updateUser(id, userDTO);
+        Map<String,Boolean>map=new HashMap<>();
+        map.put("Success",true);
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
 }
