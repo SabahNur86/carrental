@@ -26,10 +26,12 @@ public class FileDBService {
     }
 
     public FileDB getFile(String id){
+
         return fileDBRepository.findById(id).get();//file i getircez
     }
 
     public Stream<FileDB> getAllFiles(){
+
         return fileDBRepository.findAll().stream();//tum file lari getircez
     }
 
