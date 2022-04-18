@@ -1,6 +1,7 @@
 package com.carrentalproject.controller;
 
 import com.carrentalproject.domain.User;
+import com.carrentalproject.dto.AdminDTO;
 import com.carrentalproject.dto.UserDTO;
 import com.carrentalproject.projection.ProjectUser;
 import com.carrentalproject.security.jwt.JwtUtils;
@@ -89,11 +90,42 @@ public class UserController {
     @PreAuthorize("hasRole('CUSTOMER')or hasRole('ADMIN')")
     public ResponseEntity<Map<String,Boolean>> updateUser(HttpServletRequest request,
                                                           @Valid @RequestBody UserDTO userDTO){
-        Long id=(Long) request.getAttribute("id");
+        Long id=(Long) request.getAttribute("id");// token a gomulu id yi request icinden almis olduk
         userService.updateUser(id, userDTO);
         Map<String,Boolean>map=new HashMap<>();
         map.put("Success",true);
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
+    @PatchMapping("/user/auth")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CUSTOMER')")
+    public ResponseEntity<Map<String,Boolean>> updatePassword(HttpServletRequest request, @RequestBody Map<String,Object> userMap){
+       Long id=(Long)request.getAttribute("id");
+       String newPassword=(String)userMap.get("newPassword");
+       String oldPassword=(String)userMap.get("oldPassword");
+
+       userService.updatePassword(id,newPassword,oldPassword);
+       Map<String,Boolean> map=new HashMap<>();
+       map.put("Success",true);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> updateUserAuth(@PathVariable Long id, @Valid @RequestBody AdminDTO adminDTO){
+
+        userService.updateUserAuth(id,adminDTO);
+        Map<String,Boolean> map=new HashMap<>();
+        map.put("Success",true);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> deleteUser(@PathVariable Long id){
+        userService.removeById(id);
+        Map<String,Boolean> map=new HashMap<>();
+        map.put("Success",true);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+    }
 }

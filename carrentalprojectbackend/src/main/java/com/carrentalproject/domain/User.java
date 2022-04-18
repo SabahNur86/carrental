@@ -77,6 +77,9 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private Boolean builtIn; //backend'de update ve delete islemleri yapabilmemiz icin
+                             // customer kendi passwordu vs. degisiklik yapabilmesi icin builtIn false olmalı true ise login olmamistir
+                             // ya da login olmus fakat baska bir hesabin update veya delete islemlerinde sadece admin olması gerekir.
+                             // bu metodlarda da customer in builtIn i true dur ve işlem yapamaz
 
     public Set<Role> getRole(){
         return roles;
