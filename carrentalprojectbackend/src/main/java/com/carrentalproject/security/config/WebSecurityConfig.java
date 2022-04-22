@@ -61,12 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/configuration/**");//visitorlarin girecegi url ler burada yazilacak
+        web.ignoring().antMatchers("/car/visitors/**");//visitorlarin girecegi url ler burada yazilacak
     }
 
 }
