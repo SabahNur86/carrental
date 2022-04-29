@@ -46,7 +46,7 @@ public class ExcelController {
 
     }
     @GetMapping("/download/reservations")
-    @PreAuthorize("hasRole('ADMIN')")
+
     public ResponseEntity<Resource> getReservationFile(){
         String fileName="reservations.xlsx";
         InputStreamResource file=new InputStreamResource(excelService.loadReservation());

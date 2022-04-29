@@ -1,6 +1,8 @@
 package com.carrentalproject.repository;
 
+import com.carrentalproject.domain.Car;
 import com.carrentalproject.domain.Reservation;
+import com.carrentalproject.domain.User;
 import com.carrentalproject.domain.enumeration.ReservationStatus;
 import com.carrentalproject.dto.ReservationDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +18,9 @@ import java.util.Optional;
 @Transactional
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
 
+    boolean existsByUserId(User user);
+
+    boolean existsByCarId(Car car);
 
     @Query("SELECT new com.carrentalproject.dto.ReservationDTO(r) FROM Reservation r")
     List<ReservationDTO> findAllReservation(); //tum reservation bilgilerini aliyoruz

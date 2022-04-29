@@ -81,6 +81,30 @@ public class User implements Serializable {
                              // ya da login olmus fakat baska bir hesabin update veya delete islemlerinde sadece admin olması gerekir.
                              // bu metodlarda da customer in builtIn i true dur ve işlem yapamaz
 
+    public User(String firstName, String lastName, String password, String phoneNumber, String email,
+                String address, String zipCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.zipCode = zipCode;
+    }
+
+    public User(String firstName, String lastName, String password, String phoneNumber, String email,
+                String address, String zipCode, Set<Role> roles, Boolean builtIn) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.roles = roles;
+        this.builtIn = builtIn;
+    }
+
     public Set<Role> getRole(){
         return roles;
     }

@@ -10,6 +10,7 @@ import com.carrentalproject.exception.BadRequestException;
 import com.carrentalproject.exception.ConflictException;
 import com.carrentalproject.exception.ResourceNotFoundException;
 import com.carrentalproject.projection.ProjectUser;
+import com.carrentalproject.repository.ReservationRepository;
 import com.carrentalproject.repository.RoleRepository;
 import com.carrentalproject.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReservationRepository reservationRepository;
+
     private final static String USER_NOT_FOUND_MSG="user with id %d not found";
 
 
@@ -81,6 +84,28 @@ public class UserService {
 
     public List<ProjectUser> fetchAllUsers(){
         return userRepository.findAllBy();
+    }
+
+    public void addUserAuth(AdminDTO adminDTO) throws BadRequestException {
+
+        boolean emailExists = userRepository.existsByEmail(adminDTO.getEmail());
+
+        if (emailExists){
+            throw new ConflictException("Error: Email is already in use!");
+        }
+
+        String encodedPassword = passwordEncoder.encode(adminDTO.getPassword());
+        adminDTO.setPassword(encodedPassword);
+        adminDTO.setBuiltIn(false);
+
+        Set<String> userRoles = adminDTO.getRoles();
+        Set<Role> roles = addRoles(userRoles);
+
+        User user = new User(adminDTO.getFirstName(), adminDTO.getLastName(), adminDTO.getPassword(),
+                adminDTO.getPhoneNumber(), adminDTO.getEmail(), adminDTO.getAddress(), adminDTO.getZipCode(),
+                roles, adminDTO.getBuiltIn());
+
+        userRepository.save(user);
     }
 
     public void updateUser(Long id,UserDTO userDTO) throws BadRequestException{
@@ -172,6 +197,11 @@ public class UserService {
     public void removeById(Long id)throws ResourceNotFoundException{
         User user =userRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException(String.format(USER_NOT_FOUND_MSG,id)));
+
+        boolean reservation = reservationRepository.existsByUserId(user);
+
+        if (reservation)
+            throw new ResourceNotFoundException("Reservation(s) exist for user!");
         if(user.getBuiltIn()){
             throw new BadRequestException("you dont have permission to delete user");
         }
