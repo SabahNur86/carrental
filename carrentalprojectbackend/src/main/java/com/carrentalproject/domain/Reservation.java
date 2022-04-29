@@ -57,10 +57,10 @@ public class Reservation implements Serializable {
 
     public Long getTotalHours(LocalDateTime pickUpTime, LocalDateTime dropOffTime) {
 
-        Long seconds = ChronoUnit.SECONDS.between(pickUpTime, dropOffTime);
-        Long minutes = ChronoUnit.MINUTES.between(pickUpTime, dropOffTime);
+       // Long seconds = ChronoUnit.SECONDS.between(pickUpTime, dropOffTime);
+     //   Long minutes = ChronoUnit.MINUTES.between(pickUpTime, dropOffTime);
         Long hours = ChronoUnit.HOURS.between(pickUpTime, dropOffTime);
-        Long days = ChronoUnit.DAYS.between(pickUpTime, dropOffTime);
+     //   Long days = ChronoUnit.DAYS.between(pickUpTime, dropOffTime);
 
         return hours;
     }

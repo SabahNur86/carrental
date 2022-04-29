@@ -2,7 +2,6 @@ package com.carrentalproject.service;
 
 import com.carrentalproject.domain.Car;
 import com.carrentalproject.domain.FileDB;
-import com.carrentalproject.domain.User;
 import com.carrentalproject.dto.CarDTO;
 import com.carrentalproject.exception.BadRequestException;
 import com.carrentalproject.exception.ResourceNotFoundException;
@@ -20,8 +19,6 @@ import java.util.Set;
 public class CarService {
 
     private final CarRepository carRepository;
-
-    //private final ReservationRepository reservationRepository;
 
     private final FileDBRepository fileDBRepository;
 

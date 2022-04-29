@@ -66,7 +66,7 @@ public class ReservationService {
 
         Optional<Reservation> reservationExist=reservationRepository.findById(id);
         //girilen tum update olmasini istedigimiz verileri databaseden reservationExist alanina kaydediyoruz.
-        if (reservationExist.isEmpty()){
+        if (reservationExist.isEmpty()){ //belirtilen reservation id databasede yoksa hata versin
             throw new ResourceNotFoundException("Error: Reservation does not exist!");
         }
         if(reservation.getPickUpTime().compareTo(reservationExist.get().getPickUpTime())==0 &&
@@ -75,7 +75,7 @@ public class ReservationService {
             System.out.println();
         else if(checkStatus)
             throw new BadRequestException("Car is already reserved! Please choose another");
-
+            //ceckStatus doluysa secilen id deki car reserve olmus demektir
         Double totalPrice=totalPrice(reservation.getPickUpTime(),reservation.getDropOffTime(),carId.getId());
         reservationExist.get().setTotalPrice(totalPrice);
 
@@ -87,6 +87,15 @@ public class ReservationService {
         reservationExist.get().setStatus(reservation.getStatus());
 
         reservationRepository.save(reservationExist.get());
+    }
+    public void removeById(Long id) throws ResourceNotFoundException {
+        boolean reservationExists = reservationRepository.existsById(id);
+
+        if (!reservationExists){
+            throw new ResourceNotFoundException("reservation does not exist");
+        }
+
+        reservationRepository.deleteById(id);
     }
 
     public Double totalPrice(LocalDateTime pickUpTime, LocalDateTime dropOffTime, Long carId){
@@ -103,20 +112,5 @@ public class ReservationService {
                 return checkStatus.size()>0;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

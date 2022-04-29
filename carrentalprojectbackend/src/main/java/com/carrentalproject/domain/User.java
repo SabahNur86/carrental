@@ -97,4 +97,10 @@ public class User implements Serializable {
        return roles1;
     }//bu metodda user ın rollerini string bir ifade olarak gorebilmemiz icin once array e atarip
     // sonra set icinde listelemis olduk
+
+    public String getFullName(){
+        return firstName+ " " + lastName;
+    }
+
+
 }
